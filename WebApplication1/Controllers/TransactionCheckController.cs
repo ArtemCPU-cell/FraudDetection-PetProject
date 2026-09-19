@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using FraudDetectionAPI.Repositories;
+﻿using Microsoft.AspNetCore.Mvc;
+using Contracts.Models;
+using System.Text.Json;
+using Contracts.Interfaces;
 
 namespace FraudDetectionAPI.Controllers
 {
@@ -8,16 +9,27 @@ namespace FraudDetectionAPI.Controllers
     [ApiController]
     public class TransactionCheckController : ControllerBase
     {
-        [HttpPost]
-        public IActionResult PostCheckTransaction([FromBody] Transaction transaction)
+        private readonly IRiskEngine riskEngine;
+        private readonly IDatabase database;
+
+        public TransactionCheckController(IRiskEngine riskEngine, IDatabase database)
         {
-            return Ok(transaction.TransactionId);
+            this.riskEngine = riskEngine;
+            this.database = database;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PostCheckTransaction([FromBody] Transaction transaction, CancellationToken cancellationToken)
+        {
+            await database.SaveTransaction(transaction, cancellationToken);
+            return Ok(JsonSerializer.Serialize(await riskEngine.TransactionCheck(transaction, cancellationToken)));
         }
 
         [HttpGet]
-        public IActionResult GetTransactionCheck([FromQuery] string transactionId)
+        public async Task<IActionResult> GetTransactionCheck([FromQuery] Guid transactionId, CancellationToken cancellationToken)
         {
-            return Ok(transactionId);
+            var transaction = await database.GetTransaction(transactionId, cancellationToken);
+            return Ok(JsonSerializer.Serialize(transaction));
         }
     }
 }

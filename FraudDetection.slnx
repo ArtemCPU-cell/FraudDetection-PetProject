@@ -1,4 +1,6 @@
 <Solution>
-  <Project Path="RiskEngine/RiskEngine.csproj" Id="5960c597-750e-4f00-8d0a-ee63723c63c4" />
+  <Project Path="Contracts/Contracts.csproj" Id="8c515058-9f24-4475-96cb-74d9b81ce1e9" />
+  <Project Path="DataAccess.Postgres/DataAccess.Postgres.csproj" Id="106ced4e-87cc-47b4-893c-8cbfdea25d3e" />
+  <Project Path="RiskEngine/RiskEngineCore.csproj" Id="6d195b99-f5ff-48f2-82de-eec330ff13cb" />
   <Project Path="WebApplication1/FraudDetectionAPI.csproj" />
 </Solution>
