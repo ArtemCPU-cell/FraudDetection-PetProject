@@ -7,11 +7,14 @@ namespace RiskEngineCore
     {
         public async Task<RiskContext> CreateRiskContext(Transaction transaction, CancellationToken cancellationToken)
         {
+            var deviceHistory = database.GetDeviceHistory(transaction.UserId, cancellationToken);
+            var locationHistory = database.GetLocationHistory(transaction.UserId, cancellationToken);
+            await Task.WhenAll(deviceHistory, locationHistory);
             return new RiskContext
             {
                 Transaction = transaction,
-                DeviceHistory = await database.GetDeviceHistory(transaction.UserId, cancellationToken),
-                LocationHistory = await database.GetLocationHistory(transaction.UserId, cancellationToken)
+                DeviceHistory = await deviceHistory,
+                LocationHistory = await locationHistory
             };
         }
     }

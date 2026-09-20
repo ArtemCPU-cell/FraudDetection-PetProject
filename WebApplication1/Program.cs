@@ -23,7 +23,7 @@ builder.Services.AddSingleton<IRiskRule, LargeAmountRule>();
 builder.Services.AddSingleton<IRiskRule, NightTimeTransactionRule>();
 
 
-builder.Services.AddDbContext<PostgresDatabase>(options =>
+builder.Services.AddPooledDbContextFactory<PostgresDbContext>(options =>
     options.UseNpgsql(
         builder.Configuration.GetConnectionString("DefaultConnection")));
 

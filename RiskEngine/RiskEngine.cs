@@ -15,7 +15,7 @@ namespace RiskEngineCore
         {
             var riskContext = await RiskContextFactory.CreateRiskContext(transaction, cancellationToken);
             int rating = 0;
-            List<string> reasons = new List<string>();
+            List<string> reasons = new();
             foreach (IRiskRule rule in RiskRules)
             {
                 var result = rule.Evaluate(riskContext);
